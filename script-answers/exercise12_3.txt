@@ -1,0 +1,11 @@
+docker ps -a
+
+docker start -i flamboyant_keller
+
+apt-get update
+
+apt-get -y install nano
+
+nano /usr/src/app/index.js
+
+exit
