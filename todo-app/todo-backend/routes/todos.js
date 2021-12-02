@@ -17,6 +17,21 @@ router.post('/', async (req, res) => {
   res.send(todo);
 });
 
+router.get('/:id', async (req, res) => {
+  const todo = await Todo.findById(req.params.id)
+  res.send(todo);
+});
+
+router.put('/:id', async (req, res) => {
+  const body = req.body
+  const todo = {
+    text: body.text,
+    done: body.done
+  }
+  const updatedTodo = await Todo.findByIdAndUpdate(req.params.id, todo, { new: true });
+  res.send(updatedTodo);
+});
+
 const singleRouter = express.Router();
 
 const findByIdMiddleware = async (req, res, next) => {
