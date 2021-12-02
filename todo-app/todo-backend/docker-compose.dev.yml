@@ -5,6 +5,10 @@ services:
     image: redis
     ports:
       - 6379:6379
+    #The data will be persisted to directory redis_data (add the directory to .gitignore!) of the host machine: 
+    command: ['redis-server', '--appendonly', 'yes'] # Overwrite the CMD
+    volumes: # Declare the volume
+      - ./redis_data:/data
   mongo:
     image: mongo
     ports:
@@ -17,7 +21,7 @@ services:
       MONGO_INITDB_DATABASE: the_database  #This will tell MongoDB to create a database with that name
     volumes: 
       - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js #FILE-IN-HOST:FILE-IN-CONTAINER
-      - ./mongo_data:/data/db #=bind mount: creates a directory called mongo_data to your local filesystem and map it into the container as /data/db
+      - ./mongo_data:/data/db #=bind mount: creates a directory called mongo_data (add the directory to .gitignore!) to your local filesystem and map it into the container as /data/db
       
       #- mongo_data:/data/db #=named volume: does the same as a bind mount but the location is managed by Docker
 #volumes:
