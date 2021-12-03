@@ -13,10 +13,12 @@ const TodoForm = ({ createTodo }) => {
   }
 
   return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '70%', margin: 'auto' }}>
     <form onSubmit={handleSubmit}>
       <input type="text" name="text" value={text} onChange={onChange} />
       <button type="submit"> Submit </button>
     </form>
+    </div>
   )
 }
 
