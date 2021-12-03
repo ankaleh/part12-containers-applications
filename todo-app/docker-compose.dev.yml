@@ -1,0 +1,50 @@
+services:
+  frontend-dev:
+    image: todo-frontend-dev
+    build:
+      context: ./todo-frontend/. # The context will pick this directory as the "build context"
+      dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+    volumes:
+      - ./todo-frontend/:/usr/src/app 
+    container_name: todo-frontend-dev
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8080/api/ 
+
+  backend-dev:
+    image: todo-backend-dev
+    build:
+      context: ./todo-backend/. # The context will pick this directory as the "build context"
+      dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+    volumes:
+      - ./todo-backend/:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+    environment:
+      - REDIS_URL=redis
+      - MONGO_URL=mongodb://the_username:the_password@mongo/the_database
+    container_name: todo-backend-dev # This will name the container
+
+  redis: 
+    image: redis
+    #The data will be persisted to directory redis_data (add the directory to .gitignore!) of the host machine: 
+    command: ['redis-server', '--appendonly', 'yes'] # Overwrite the CMD
+    volumes: # Declare the volume
+      - ./todo-backend/redis_data:/data
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root #These variables, used in conjunction, 
+      MONGO_INITDB_ROOT_PASSWORD: example #create a new user and set that user's password. 
+                                           #This user is created in the admin authentication database 
+                                           #and given the role of root, which is a "superuser" role.
+      MONGO_INITDB_DATABASE: the_database  #This will tell MongoDB to create a database with that name
+    volumes: 
+      - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js #FILE-IN-HOST:FILE-IN-CONTAINER
+      - ./todo-backend/mongo_data:/data/db 
+      
+  nginx:
+      image: nginx:1.20.1
+      volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      ports:
+        - 8080:80
+      container_name: reverse-proxy
