@@ -1,0 +1,15 @@
+services:
+  frontend:
+    image: todo-frontend-dev
+    build:
+      context: . # The context will pick this directory as the "build context"
+      dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+    volumes:
+      - ./:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+    ports:
+      - 8000:3000
+    container_name: todo-frontend-dev # This will name the container
+#Install the new dependency inside the container. 
+#So instead of doing e.g. npm install axios, do it in the running container 
+#e.g. docker exec hello-front-dev npm install axios, 
+#or add it to the package.json and run docker build again.
