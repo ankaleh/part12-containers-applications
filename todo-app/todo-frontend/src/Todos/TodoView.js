@@ -42,7 +42,6 @@ const TodoView = () => {
 
   if (id) {
     const todo = todos.find(t => t._id === id)
-    console.log('id on', todo)
     if (todo) {
       return (
         <SingleTodo todo={todo} deleteTodo={deleteTodo} completeTodo={completeTodo}/>
