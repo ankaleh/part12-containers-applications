@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  my-app-frontend-dev:
+    image: my-app-frontend-dev
+    build:
+      context: ./frontend/. # The context will pick this directory as the "build context"
+      dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/:/usr/src/app 
+    container_name: my-app-frontend-dev
+
+  my-app-backend-dev:
+    image: my-app-backend-dev
+    build:
+      context: ./backend/. # The context will pick this directory as the "build context"
+      dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+    volumes:
+      - ./backend/:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+      - /usr/src/app/node_modules
+    ports:
+      - 4000:4000
+    env_file:
+      - .env
+    environment: 
+      - MONGODB_URI=${MONGODB_URI}
+      - SECRET=${SECRET}
+      - PORT=4000
+    container_name: my-app-backend-dev # This will name the container
+
+  mongo:
+    image: mongo
+    ports:
+     - "27017"
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME} #These variables, used in conjunction, 
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD} #create a new user and set that user's password. 
+                                           #This user is created in the admin authentication database 
+                                           #and given the role of root, which is a "superuser" role.
+      MONGO_INITDB_DATABASE: my_app_database  #This will tell MongoDB to create a database with that name
+    volumes: 
+      - ./backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js #FILE-IN-HOST:FILE-IN-CONTAINER
+      - ./backend/mongo_data:/data/db #=bind mount: creates a directory called mongo_data (add the directory to .gitignore!) to your local filesystem and map it into the container as /data/db

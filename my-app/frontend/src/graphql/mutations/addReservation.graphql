@@ -1,0 +1,14 @@
+mutation ($startDate: String!, $endDate: String!){
+  addReservation(
+    endDate: $endDate
+    startDate: $startDate
+  ){
+    endDate
+    startDate
+    id
+    reservedBy {
+      id
+      name
+    }
+  }
+}

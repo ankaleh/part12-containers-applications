@@ -1,0 +1,13 @@
+query {
+  allTasks {
+    id
+    description
+    done
+    addedBy {
+      name
+    }
+    doneBy {
+      name
+    }
+  }
+}

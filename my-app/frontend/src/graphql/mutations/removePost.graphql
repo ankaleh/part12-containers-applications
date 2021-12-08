@@ -1,0 +1,9 @@
+mutation ($id: ID!){
+  removePost(
+      id: $id
+  ){
+    endDate
+    startDate
+    id
+  }
+}

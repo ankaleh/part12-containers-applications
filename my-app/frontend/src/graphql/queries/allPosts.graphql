@@ -1,0 +1,17 @@
+query {
+    allPosts {
+        startDate
+        endDate
+        text
+        unidentifiedGuests
+        writtenBy {
+            name
+            id
+        }
+        id
+        guests {
+            name
+        }
+    
+    }
+}

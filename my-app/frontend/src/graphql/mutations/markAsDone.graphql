@@ -1,0 +1,14 @@
+mutation($description: String!) {
+  markAsDone(
+    description: $description
+  ){
+    done
+    doneBy {
+        name
+    }
+    id
+    addedBy{
+      name
+    }
+  }
+}

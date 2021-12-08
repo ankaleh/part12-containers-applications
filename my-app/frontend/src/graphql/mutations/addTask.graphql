@@ -1,0 +1,15 @@
+mutation ($description: String!){
+  addTask(
+      description: $description
+  ){
+      description
+      addedBy {
+          name
+      }
+      doneBy {
+          name
+      }
+      done
+      id
+    }
+}

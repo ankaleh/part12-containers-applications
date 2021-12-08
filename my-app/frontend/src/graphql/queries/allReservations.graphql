@@ -1,0 +1,11 @@
+query {
+  allReservations {
+    startDate
+    endDate
+     reservedBy {
+      id
+      name
+    }
+    id
+  }
+}

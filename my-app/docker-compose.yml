@@ -1,0 +1,38 @@
+services:
+  frontend:
+    image: my-app-frontend
+    build:
+      context: ./frontend/. # The context will pick this directory as the "build context"
+      dockerfile: Dockerfile # This will simply tell which dockerfile to read
+    container_name: my-app-frontend-prod
+
+  backend:
+    image: my-app-backend
+    build:
+      context: ./backend/. # The context will pick this directory as the "build context"
+      dockerfile: Dockerfile # This will simply tell which dockerfile to read
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+    container_name: my-app-backend-prod # This will name the container
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME} #These variables, used in conjunction, 
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_USERNAME} #create a new user and set that user's password. 
+                                           #This user is created in the admin authentication database 
+                                           #and given the role of root, which is a "superuser" role.
+      MONGO_INITDB_DATABASE: my_app_database  #This will tell MongoDB to create a database with that name
+    volumes: 
+      - ./backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js #FILE-IN-HOST:FILE-IN-CONTAINER
+      - ./backend/mongo_data:/data/db 
+      
+  nginx:
+      image: nginx:1.20.1
+      volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      ports:
+        - 8080:80
+      container_name: reverse-proxy
