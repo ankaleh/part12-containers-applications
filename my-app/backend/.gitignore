@@ -1,5 +1,6 @@
 mongo_data
 mongo
+.DS_Store
 # Logs
 logs
 *.log
